@@ -12,6 +12,7 @@ use Shopware\SimklThemeSettingExport\Bootstrap\Installer,
     Shopware\SimklThemeSettingExport\Bootstrap\Updater,
     Shopware\SimklThemeSettingExport\Components\ThemeImportExportService,
     Shopware\SimklThemeSettingExport\Subscriber\Backend,
+    Shopware\Commands\SimklThemeSettingExport\Command,
     Shopware\Commands\SimklThemeSettingExport\ThemeImportConfigurationCommand,
     Shopware\Commands\SimklThemeSettingExport\ThemeExportConfigurationCommand,
     Doctrine\Common\Collections\ArrayCollection;
