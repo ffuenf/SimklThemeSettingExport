@@ -9,25 +9,26 @@
  * @license    http://www.gnu.org/licenses/agpl-3.0.en.html GNU AFFERO GENERAL PUBLIC LICENSE
  */
 
-namespace Shopware\SimklThemeSettingExport\Commands;
+namespace Shopware\Commands\SimklThemeSettingExport;
 
 use Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Output\OutputInterface;
 
-class ThemeExportConfigurationCommand extends Command {
+class ThemeImportConfigurationCommand extends Command
+{
 
     /**
      * {@inheritdoc}
      */
     protected function configure() {
         $this
-            ->setName('sw:theme:export:configuration')
-            ->setDescription('Outputs a theme configuration')
-            ->addArgument('theme', InputArgument::REQUIRED, 'Theme', null)
-            ->addArgument('shop', InputArgument::REQUIRED, 'Subshop', null)
-            ->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'configuration will be written to the given file', null)
+            ->setName('sw:theme:import:configuration')
+            ->setDescription('Imports a theme configuration')
+            ->addArgument('theme', InputArgument::REQUIRED, 'theme to export', null)
+            ->addArgument('shop', InputArgument::REQUIRED, 'subshop', null)
+            ->addOption('file', 'f', InputOption::VALUE_REQUIRED, 'read config from file', null)
         ;
     }
 
@@ -38,20 +39,36 @@ class ThemeExportConfigurationCommand extends Command {
         $contents = "";
         $theme = $this->getThemeModel($input->getArgument('theme'));
         $shop = $this->getShopModel($input->getArgument('shop'));
-        $file = $input->getOption('output');
 
         if ($theme == null)
             throw new \InvalidArgumentException('invalid theme given');
         if ($shop == null)
             throw new \InvalidArgumentException('invalid shop given');
 
-        $settings = serialize($this->getService()->getThemeSettingsArray($theme,$shop));
+
+        $file = $input->getOption('file');
         if ($file) {
-            file_put_contents($file, $settings);
+            $contents = $this->getContentsFromFile($file);
         }
         else {
-            $output->writeln($settings);
+            // allows the user to pipe the configuration
+            while (!feof(STDIN)) {
+                $contents .= fread(STDIN, 1024);
+            }
         }
+        
+        $this->getService()->setThemeSettingsArray($theme,$shop,unserialize($contents));
+    }
 
+    /**
+     * returns contents of file
+     * @param  String $file file path
+     * @return String       contents
+     */
+    private function getContentsFromFile($file) {
+        if (!file_exists($file))
+            throw new \InvalidArgumentException("file not found");
+
+        return file_get_contents($file);
     }
 }

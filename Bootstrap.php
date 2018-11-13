@@ -12,8 +12,8 @@ use Shopware\SimklThemeSettingExport\Bootstrap\Installer,
     Shopware\SimklThemeSettingExport\Bootstrap\Updater,
     Shopware\SimklThemeSettingExport\Components\ThemeImportExportService,
     Shopware\SimklThemeSettingExport\Subscriber\Backend,
-    Shopware\SimklThemeSettingExport\Commands\ThemeImportConfigurationCommand,
-    Shopware\SimklThemeSettingExport\Commands\ThemeExportConfigurationCommand,
+    Shopware\Commands\SimklThemeSettingExport\ThemeImportConfigurationCommand,
+    Shopware\Commands\SimklThemeSettingExport\ThemeExportConfigurationCommand,
     Doctrine\Common\Collections\ArrayCollection;
 
 class Shopware_Plugins_Backend_SimklThemeSettingExport_Bootstrap extends Shopware_Components_Plugin_Bootstrap {
