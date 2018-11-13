@@ -12,10 +12,10 @@ use Shopware\SimklThemeSettingExport\Bootstrap\Installer,
     Shopware\SimklThemeSettingExport\Bootstrap\Updater,
     Shopware\SimklThemeSettingExport\Components\ThemeImportExportService,
     Shopware\SimklThemeSettingExport\Subscriber\Backend,
+    Doctrine\Common\Collections\ArrayCollection,
     Shopware\Commands\SimklThemeSettingExport\Command,
     Shopware\Commands\SimklThemeSettingExport\ThemeImportConfigurationCommand,
-    Shopware\Commands\SimklThemeSettingExport\ThemeExportConfigurationCommand,
-    Doctrine\Common\Collections\ArrayCollection;
+    Shopware\Commands\SimklThemeSettingExport\ThemeExportConfigurationCommand;
 
 class Shopware_Plugins_Backend_SimklThemeSettingExport_Bootstrap extends Shopware_Components_Plugin_Bootstrap {
 
@@ -68,6 +68,7 @@ class Shopware_Plugins_Backend_SimklThemeSettingExport_Bootstrap extends Shopwar
         if (!$this->assertMinimumVersion('5')) {
             return array('success' => false, 'message' => "this plugin requires at least Shopware version 5");
         }
+        $this->registerEvents();
         return (new Installer($this))->install();
     }
 
@@ -98,6 +99,21 @@ class Shopware_Plugins_Backend_SimklThemeSettingExport_Bootstrap extends Shopwar
         $this->Application()->Loader()->registerNamespace(
             'Shopware\SimklThemeSettingExport', 
             $this->Path()
+        );
+        $this->Application()->Loader()->registerNamespace(
+            'Shopware\Commands', 
+            $this->Path() . 'Commands/'
+        );
+    }
+
+    /**
+     * Registers all necessary events.
+     */
+    protected function registerEvents()
+    {
+        $this->subscribeEvent(
+            'Shopware_Console_Add_Command',
+            'onAddConsoleCommand'
         );
     }
 
