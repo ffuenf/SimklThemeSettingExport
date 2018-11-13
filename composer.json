@@ -1,5 +1,5 @@
 {
-    "name": "simkli/SimklThemeSettingExport",
+    "name": "simkli/simklthemesettingexport",
     "type": "shopware-backend-plugin",
     "description": "Import or export theme configurations in Shopware",
     "license": "GPLv3",
